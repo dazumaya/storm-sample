@@ -73,7 +73,7 @@ public class SampleTopology {
         if (args.length == 0) {
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("reachCounter", conf, topology.build());
-            Thread.sleep(10000);
+            Thread.sleep(100000);
             cluster.killTopology("reachCounter");
             cluster.shutdown();
         }
