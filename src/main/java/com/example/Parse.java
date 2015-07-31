@@ -5,7 +5,7 @@ import storm.trident.operation.BaseFunction;
 import storm.trident.operation.TridentCollector;
 import storm.trident.tuple.TridentTuple;
 
-public class Parse extends BaseFunction {
+class Parse extends BaseFunction {
     public void execute(TridentTuple tuple, TridentCollector collector) {
         String sentence = tuple.getString(0);
         String[] p = sentence.split(" ");

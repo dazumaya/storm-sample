@@ -3,8 +3,6 @@ package com.example;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
-import backtype.storm.generated.AlreadyAliveException;
-import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.tuple.Fields;
 import org.apache.storm.guava.collect.Lists;
@@ -22,7 +20,6 @@ import storm.kafka.StringScheme;
 import storm.kafka.ZkHosts;
 import storm.kafka.trident.OpaqueTridentKafkaSpout;
 import storm.kafka.trident.TridentKafkaConfig;
-import storm.trident.TridentState;
 import storm.trident.TridentTopology;
 import storm.trident.operation.builtin.Count;
 
@@ -30,17 +27,17 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
-public class SampleTopology {
+class SampleTopology {
     public static void main(String[] args) throws InterruptedException {
         BrokerHosts zk = new ZkHosts("localhost");
         TridentKafkaConfig spoutConf = new TridentKafkaConfig(zk, "test");
         spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
         OpaqueTridentKafkaSpout spout = new OpaqueTridentKafkaSpout(spoutConf);
 
-        Map hikariConfigMap = Maps.newHashMap();
-        hikariConfigMap.put("dataSourceClassName","com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+        Map<String, Object> hikariConfigMap = Maps.newHashMap();
+        hikariConfigMap.put("dataSourceClassName", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         hikariConfigMap.put("dataSource.url", "jdbc:mysql://localhost/test");
-        hikariConfigMap.put("dataSource.user","root");
+        hikariConfigMap.put("dataSource.user", "root");
         //hikariConfigMap.put("dataSource.password","password");
         ConnectionProvider connectionProvider = new HikariCPConnectionProvider(hikariConfigMap);
 
@@ -76,8 +73,7 @@ public class SampleTopology {
             Thread.sleep(100000);
             cluster.killTopology("reachCounter");
             cluster.shutdown();
-        }
-        else {
+        } else {
             conf.setNumWorkers(3);
             try {
                 StormSubmitter.submitTopologyWithProgressBar(args[0], conf, topology.build());
